@@ -6,7 +6,7 @@
 
 /* global adminpage */
 (function($){
-	var wrap, next;
+	var wrap;
 
 	/**
 	 * Shows the authentication form popup.
@@ -51,8 +51,8 @@
 					else
 						parent.css( 'max-height', height + 40 + 'px' );
 				} else if ( ! body || ! body.length ) {
-					// Catch "silent" iframe origin exceptions in WebKit after another page is
-					// loaded in the iframe.
+					// Catch "silent" iframe origin exceptions in WebKit
+					// after another page is loaded in the iframe.
 					wrap.addClass('fallback');
 					parent.css( 'max-height', '' );
 					form.remove();
@@ -68,9 +68,11 @@
 
 		if ( frame ) {
 			frame.focus();
-			// WebKit doesn't throw an error if the iframe fails to load because of
-			// "X-Frame-Options: DENY" header.
-			// Wait for 10 sec. and switch to the fallback text.
+			/*
+			 * WebKit doesn't throw an error if the iframe fails to load
+			 * because of "X-Frame-Options: DENY" header.
+			 * Wait for 10 seconds and switch to the fallback text.
+			 */
 			setTimeout( function() {
 				if ( ! loaded ) {
 					wrap.addClass('fallback');
@@ -92,8 +94,8 @@
 	function hide() {
 		$(window).off( 'beforeunload.wp-auth-check' );
 
-		// When on the Edit Post screen, speed up heartbeat after the user logs in to
-		// quickly refresh nonces.
+		// When on the Edit Post screen, speed up heartbeat
+		// after the user logs in to quickly refresh nonces.
 		if ( typeof adminpage !== 'undefined' && ( adminpage === 'post-php' || adminpage === 'post-new-php' ) &&
 			typeof wp !== 'undefined' && wp.heartbeat ) {
 
@@ -106,18 +108,6 @@
 			$('#wp-auth-check-frame').remove();
 			$( 'body' ).removeClass( 'modal-open' );
 		});
-	}
-
-	/**
-	 * Schedules when the next time the authentication check will be done.
-	 *
-	 * @since 3.6.0
-	 * @private
-	 */
-	function schedule() {
-		// In seconds, default 3 min.
-		var interval = parseInt( window.authcheckL10n.interval, 10 ) || 180;
-		next = ( new Date() ).getTime() + ( interval * 1000 );
 	}
 
 	/**
@@ -136,31 +126,13 @@
 	 */
 	$( document ).on( 'heartbeat-tick.wp-auth-check', function( e, data ) {
 		if ( 'wp-auth-check' in data ) {
-			schedule();
 			if ( ! data['wp-auth-check'] && wrap.hasClass('hidden') ) {
 				show();
 			} else if ( data['wp-auth-check'] && ! wrap.hasClass('hidden') ) {
 				hide();
 			}
 		}
-
-	/**
-	 * Binds to the Heartbeat Send event.
-	 *
-	 * @ignore
-	 *
-	 * @since 3.6.0
-	 *
-	 * @param {Object} e The heartbeat-send event that has been triggered.
-	 * @param {Object} data Response data.
-	 */
-	}).on( 'heartbeat-send.wp-auth-check', function( e, data ) {
-		if ( ( new Date() ).getTime() > next ) {
-			data['wp-auth-check'] = true;
-		}
-
 	}).ready( function() {
-		schedule();
 
 		/**
 		 * Hides the authentication form popup when the close icon is clicked.

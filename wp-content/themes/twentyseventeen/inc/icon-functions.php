@@ -4,7 +4,7 @@
  *
  * @package WordPress
  * @subpackage Twenty_Seventeen
- * @since 1.0
+ * @since Twenty Seventeen 1.0
  */
 
 /**
@@ -16,7 +16,7 @@ function twentyseventeen_include_svg_icons() {
 
 	// If it exists, include it.
 	if ( file_exists( $svg_icons ) ) {
-		require_once( $svg_icons );
+		require_once $svg_icons;
 	}
 }
 add_action( 'wp_footer', 'twentyseventeen_include_svg_icons', 9999 );
@@ -197,12 +197,15 @@ function twentyseventeen_social_links_icons() {
 		'soundcloud.com'  => 'soundcloud',
 		'spotify.com'     => 'spotify',
 		'stumbleupon.com' => 'stumbleupon',
+		't.me'            => 'telegram',
+		'telegram.me'     => 'telegram',
 		'tumblr.com'      => 'tumblr',
 		'twitch.tv'       => 'twitch',
 		'twitter.com'     => 'twitter',
 		'vimeo.com'       => 'vimeo',
 		'vine.co'         => 'vine',
 		'vk.com'          => 'vk',
+		'whatsapp.com'    => 'whatsapp',
 		'wordpress.org'   => 'wordpress',
 		'wordpress.com'   => 'wordpress',
 		'yelp.com'        => 'yelp',
